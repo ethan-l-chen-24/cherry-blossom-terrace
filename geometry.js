@@ -20,41 +20,45 @@ export function addFloor(scene) {
 
 export function addProceduralTree(scene) {
 
-    let branchRadius1 = 2;
-    let branchRadius2 = 5;
-    let branchLength = 40;
+    let branchRadius1 = 0.3;
+    let branchRadius2 = 0.7;
+    let branchLength = 10;
 
     let baseGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
-    let baseMaterial = new THREE.MeshBasicMaterial({ color: 0x964B00 });
+    let baseMaterial = new THREE.MeshBasicMaterial({ color: 0x36261b });
 
     const base = new THREE.Mesh(baseGeo, baseMaterial);
     base.position.set(0, branchLength / 2, 0);
 
     // create branches down to 6 layers (3^6 lowest level branches)
-    generateBranches(base, 6, branchRadius1 / 2, branchRadius2 / 2, branchLength / 2)
+    let lowestLevelBranches = [];
+    generateBranches(base, 7, branchRadius1 / 2, branchRadius2 / 2, branchLength / 2, lowestLevelBranches)
 
+    // draw the tree
     scene.add(base);
+
+    return lowestLevelBranches;
 }
 
 // recursively generate branches given a parent
-function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLength) {
+function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLength, lowestLevelBranches) {
     if(depth == 0) {
         return;
     }
 
     let branchGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
-    let branchMaterial = new THREE.MeshBasicMaterial({ color: 0x964B00 });
+    let branchMaterial = new THREE.MeshBasicMaterial({ color: 0x36261b });
 
     // create 3 with random positioned starting location
     const branch1 = new THREE.Mesh(branchGeo, branchMaterial);
-    const startPoint = new THREE.Vector3(0, (Math.random() - 0.3) * branchLength / 3, 0);
+    const startPoint = new THREE.Vector3(0, (Math.random() - 0.1) * branchLength / 3, 0);
     const endPoint = new THREE.Vector3(0, 1000, 1000);
     branch1.position.copy(startPoint);
     branch1.lookAt(endPoint);
     branch1.translateY(branchLength / 2)
 
     const branch2 = new THREE.Mesh(branchGeo, branchMaterial);
-    const startPoint2 = new THREE.Vector3(0, (Math.random() - 0.3) * branchLength / 3, 0);
+    const startPoint2 = new THREE.Vector3(0, (Math.random() - 0.1) * branchLength / 3, 0);
     const endPoint2 = new THREE.Vector3(1000, 1000, 0);
     branch2.position.copy(startPoint2);
     branch2.lookAt(endPoint2);
@@ -73,7 +77,14 @@ function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLen
     parent.add(branch3);
 
     // generate child branches
-    generateBranches(branch1, depth - 1, branchRadius1 / 2.5, branchRadius2 / 2.5, branchLength / 1.7);
-    generateBranches(branch2, depth - 1, branchRadius1 / 2.5, branchRadius2 / 2.5, branchLength / 1.7);
-    generateBranches(branch3, depth - 1, branchRadius1 / 2.5, branchRadius2 / 2.5, branchLength / 1.7);
+    generateBranches(branch1, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.6 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch2, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.6 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch3, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.6 + Math.random() * 0.4), lowestLevelBranches);
+
+    // accumulate the leaf branches in the array
+    if(depth <= 3) {
+        lowestLevelBranches.push(branch1);
+        lowestLevelBranches.push(branch2);
+        lowestLevelBranches.push(branch2);
+    }
 }
