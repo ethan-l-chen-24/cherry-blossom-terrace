@@ -241,9 +241,7 @@ async function startScene() {
     var particles = new ParticleSystem(scene, meshes["Petal"]);
 
     addFloor(scene);
-    console.log("here")
     let twigs = addProceduralTree(scene);
-    console.log(twigs)
 
     for(let i = 0; i < twigs.length; i++) {
         var twig = twigs[i];
