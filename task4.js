@@ -12,9 +12,9 @@ class ParticleSystem {
 
         // initialize some random particles
         this._particles = [];
-        for(var i = 0; i < 1000; i++) {
+        for(var i = 0; i < 3000; i++) {
             var p = particle.clone();
-            p.position.set((Math.random() - 0.5) * 20 - 10, 35, (Math.random() - 0.5) * 10);
+            p.position.set((Math.random() - 0.5) * 20 - 150, 35, (Math.random() - 0.5) * 10);
             p.rotation.set((Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI);
             var mass = Math.random() * 0.5 + 0.25;
             this._particles.push({
@@ -33,7 +33,7 @@ class ParticleSystem {
         // force values/constants
         this._gravity = new THREE.Vector3(0, -9.8 * 0.0000001, 0);
         this._windVector = new THREE.Vector3(1.0, 0, 0);
-        this._windMag = 0.0000005;
+        this._windMag = 0.000005;
         this._dragCo = 2;
     }
 
@@ -74,10 +74,19 @@ class ParticleSystem {
                 newRotation = p.rotation.clone();
                 newVelocity = new THREE.Vector3(0, 0, 0);
                 newAngularVelocity = new THREE.Vector3(0, 0, 0);
+
+                let windMassRatio = this._windMag / p.mass;
+                if(windMassRatio > 0.00001) {
+                    newPosition = new THREE.Vector3(p.position.x, 0.1, p.position.z);
+                    newVelocity = new THREE.Vector3(0, windMassRatio * 100, 0);
+                }
+
             } 
 
             if(newPosition.y <= 0) {
                 this._particles[i].grounded = true;
+            } else {
+                this._particles[i].grounded = false;
             }
 
             this._particles[i].position = newPosition;
@@ -151,7 +160,7 @@ async function startScene() {
     const near = 1.0;
     const far = 1000.0;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-    camera.position.z = 50;
+    camera.position.z = 100;
     camera.position.y = 5;
 
     // setup the THREE.js renderer
