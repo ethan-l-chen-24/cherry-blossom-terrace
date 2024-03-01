@@ -14,7 +14,7 @@ class ParticleSystem {
         this._particles = [];
         for(var i = 0; i < 3000; i++) {
             var p = particle.clone();
-            p.position.set((Math.random() - 0.5) * 20 - 150, 35, (Math.random() - 0.5) * 10);
+            p.position.set((Math.random() - 0.5) * 20 - 150, 0, (Math.random() - 0.5) * 10);
             p.rotation.set((Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI);
             var mass = Math.random() * 0.5 + 0.25;
             this._particles.push({
@@ -33,8 +33,11 @@ class ParticleSystem {
         // force values/constants
         this._gravity = new THREE.Vector3(0, -9.8 * 0.0000001, 0);
         this._windVector = new THREE.Vector3(1.0, 0, 0);
-        this._windMag = 0.000005;
+        this._windMag = 0;
         this._dragCo = 2;
+
+        // time to update wind
+        this._time = 0;
     }
 
     _UpdateParticles(timeElapsed) {
@@ -58,9 +61,9 @@ class ParticleSystem {
             )
 
             let newVelocity = new THREE.Vector3(
-                p.velocity.x + (forces.x / p.mass * timeElapsed) + (Math.random() - 0.5) * this._windMag * 100,
-                p.velocity.y + (forces.y / p.mass * timeElapsed) + (Math.random() - 0.5) * this._windMag * 100,
-                p.velocity.z + (forces.z / p.mass * timeElapsed) + (Math.random() - 0.5) * this._windMag * 100
+                p.velocity.x + (forces.x / p.mass * timeElapsed) + (Math.random() - 0.5) * this._windMag * 300,
+                p.velocity.y + (forces.y / p.mass * timeElapsed) + (Math.random() - 0.5) * this._windMag * 300,
+                p.velocity.z + (forces.z / p.mass * timeElapsed) + (Math.random() - 0.5) * this._windMag * 300
             )
 
             let newAngularVelocity = new THREE.Vector3(
@@ -79,6 +82,7 @@ class ParticleSystem {
                 if(windMassRatio > 0.00001) {
                     newPosition = new THREE.Vector3(p.position.x, 0.1, p.position.z);
                     newVelocity = new THREE.Vector3(0, windMassRatio * 100, 0);
+                    newAngularVelocity = new THREE.Vector3((Math.random() - 0.5) * windMassRatio * 100, (Math.random() - 0.5) * windMassRatio * 100, (Math.random() - 0.5) * windMassRatio * 100);
                 }
 
             } 
@@ -96,6 +100,10 @@ class ParticleSystem {
             p.particle.position.set(newPosition.x, newPosition.y, newPosition.z);
             p.particle.rotation.set(newRotation.x, newRotation.y, newRotation.z);
         }
+
+        // change wind field
+        this._time += 0.01;
+        this.updateWind();
     }
 
     calculateForces(mass, velocity, area) {
@@ -125,6 +133,16 @@ class ParticleSystem {
         )
 
         return netForces;
+    }
+
+    updateWind() {
+        this._windMag = 0.000005 * Math.sin(this._time) + 0.000005;
+        
+        this._windVector = new THREE.Vector3(
+            Math.cos(this._time / 4),
+            0,
+            Math.sin(this._time / 4)
+        )
     }
 }
 
