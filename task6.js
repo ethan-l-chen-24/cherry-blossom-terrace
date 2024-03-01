@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class ParticleSystem {
     constructor(scene, particle) {
-        this._material = new THREE.MeshStandardMaterial({ color: 0xff4444});
+        this._material = new THREE.MeshLambertMaterial({ color: 0xff4444});
         this._scene = scene;
 
         // initialize some random particles
@@ -197,7 +197,7 @@ async function loadModels() {
     meshes["Petal"] = await loadGLB('assets/SakuraHanaBira/SakuraHanaBira.glb');
     meshes["Petal"].traverse(function (child) {
         if(child.isMesh) {
-            child.material = new THREE.MeshBasicMaterial({color: 0xffd7e2});
+            child.material = new THREE.MeshLambertMaterial({color: 0xffd7e2});
         }
     })
 
@@ -230,8 +230,12 @@ async function startScene() {
     controls.enableDamping = true;
 
     // add light
-    var light = new THREE.AmbientLight(0x404040, 1000);
-    scene.add(light);
+    var dirLight = new THREE.DirectionalLight(0x404040, 80);
+    dirLight.position.set(0, 20, 40);
+    scene.add(dirLight);
+
+    const ambientLight = new THREE.AmbientLight(0x404040, 20);
+    scene.add(ambientLight);
 
     // create particle system
     var particles = new ParticleSystem(scene, meshes["Petal"]);

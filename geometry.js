@@ -2,14 +2,14 @@ import * as THREE from 'three';
 
 export function addGeometry(scene) {
     const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
+    const material = new THREE.MeshLambertMaterial( { color: 0xFFFFFF } );
     const cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 }
 
 export function addFloor(scene) {
     let geometry = new THREE.PlaneGeometry(2000, 2000, 10, 10);
-    let material = new THREE.MeshBasicMaterial({ color: 0x333333, side: THREE.DoubleSide });
+    let material = new THREE.MeshLambertMaterial({ color: 0x333333, side: THREE.DoubleSide });
     let ground = new THREE.Mesh(geometry, material);
     ground.rotation.x = -Math.PI / 2; 
     ground.position.y = 0;
@@ -25,7 +25,7 @@ export function addProceduralTree(scene) {
     let branchLength = 10;
 
     let baseGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
-    let baseMaterial = new THREE.MeshBasicMaterial({ color: 0x36261b });
+    let baseMaterial = new THREE.MeshLambertMaterial({ color: 0x36261b });
 
     const base = new THREE.Mesh(baseGeo, baseMaterial);
     base.position.set(0, branchLength / 2, 0);
@@ -47,7 +47,7 @@ function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLen
     }
 
     let branchGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
-    let branchMaterial = new THREE.MeshBasicMaterial({ color: 0x36261b });
+    let branchMaterial = new THREE.MeshLambertMaterial({ color: 0x36261b });
 
     // create 3 with random positioned starting location
     const branch1 = new THREE.Mesh(branchGeo, branchMaterial);
