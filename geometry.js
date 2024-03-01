@@ -30,12 +30,13 @@ export function addProceduralTree(scene) {
     const base = new THREE.Mesh(baseGeo, baseMaterial);
     base.position.set(0, branchLength / 2, 0);
 
-    // create branches
+    // create branches down to 6 layers (3^6 lowest level branches)
     generateBranches(base, 6, branchRadius1 / 2, branchRadius2 / 2, branchLength / 2)
 
     scene.add(base);
 }
 
+// recursively generate branches given a parent
 function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLength) {
     if(depth == 0) {
         return;
@@ -44,6 +45,7 @@ function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLen
     let branchGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
     let branchMaterial = new THREE.MeshBasicMaterial({ color: 0x964B00 });
 
+    // create 3 with random positioned starting location
     const branch1 = new THREE.Mesh(branchGeo, branchMaterial);
     const startPoint = new THREE.Vector3(0, (Math.random() - 0.3) * branchLength / 3, 0);
     const endPoint = new THREE.Vector3(0, 1000, 1000);
@@ -65,26 +67,13 @@ function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLen
     branch3.lookAt(endPoint3);
     branch3.translateY(branchLength / 2)
 
+    // add the branches to the parent
     parent.add(branch1);
     parent.add(branch2);
     parent.add(branch3);
 
+    // generate child branches
     generateBranches(branch1, depth - 1, branchRadius1 / 2.5, branchRadius2 / 2.5, branchLength / 1.7);
     generateBranches(branch2, depth - 1, branchRadius1 / 2.5, branchRadius2 / 2.5, branchLength / 1.7);
     generateBranches(branch3, depth - 1, branchRadius1 / 2.5, branchRadius2 / 2.5, branchLength / 1.7);
-}
-
-function rotateAboutPoint(model, point, rotation) {
-    // Step 1: Translate the model so that the point becomes the origin
-    const translation = new THREE.Matrix4().makeTranslation(-point.x, -point.y, -point.z);
-    model.applyMatrix4(translation);
-
-    // Step 2: Apply the desired rotation
-    model.rotation.x += rotation.x;
-    model.rotation.y += rotation.y;
-    model.rotation.z += rotation.z;
-
-    // Step 3: Translate the model back to its original position
-    const inverseTranslation = new THREE.Matrix4().makeTranslation(point.x, point.y, point.z);
-    model.applyMatrix4(inverseTranslation);
 }
