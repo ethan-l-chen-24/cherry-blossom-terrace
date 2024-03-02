@@ -1,4 +1,4 @@
-// Add petals to the tree and have them fly off
+// Add petals to the tree and have them fly off, and generally make the scene look nicer
 
 import * as THREE from 'three';
 import { addFloor, addProceduralTree } from './geometry.js';
@@ -41,12 +41,15 @@ class ParticleSystem {
         this._time = 0;
     }
 
-    _CreateParticle(position, rotatio) {
-        var mass = Math.random() * 0.5 + 0.25;
+    _CreateParticle(p) {
+        this._scene.add(p)
+
+        let mass = p.scale.x * p.scale.y * p.scale.z / 3;
+
         this._particles.push({
             particle: p,
-            position: p.position,
-            rotation: p.rotation,
+            position: p.position.clone(),
+            rotation: p.rotation.clone(),
             velocity: new THREE.Vector3(0.0, 0.0, 0.0),
             area: mass,
             mass: mass,
@@ -114,14 +117,14 @@ class ParticleSystem {
 
             // check if it is attached to the tree, in which case don't move
             if(p.attached) {
-                newPosition = new THREE.Vector3(p.position.x, 0, p.position.z);
+                newPosition = new THREE.Vector3(p.position.x, p.position.y, p.position.z);
                 newRotation = p.rotation.clone();
                 newVelocity = new THREE.Vector3(0, 0, 0);
                 newAngularVelocity = new THREE.Vector3(0, 0, 0);
 
-                let windMassRatio = Math.random() * this._windMag / p.mass;
+                let windMassRatio = Math.random() * this._windMag / p.mass / 2;
                 if(windMassRatio > 0.00001) {
-                    //this._particles[i].attached = false;
+                    this._particles[i].attached = false;
                 }
             }
 
@@ -168,8 +171,9 @@ class ParticleSystem {
     }
 
     updateWind() {
-        this._windMag = 0.000005 * Math.sin(this._time) + 0.000005;
-        
+        this._windMag = 0.000005 * Math.log(this._time / 2) * Math.sin(this._time) + 0.000005;
+        console.log(this._windMag)
+
         this._windVector = new THREE.Vector3(
             Math.cos(this._time / 4),
             0,
@@ -237,6 +241,8 @@ async function startScene() {
     const ambientLight = new THREE.AmbientLight(0x404040, 20);
     scene.add(ambientLight);
 
+    scene.background = new THREE.Color(0x87ceeb);
+
     // create particle system
     var particles = new ParticleSystem(scene, meshes["Petal"]);
 
@@ -246,7 +252,26 @@ async function startScene() {
     for(let i = 0; i < twigs.length; i++) {
         var twig = twigs[i];
         let petal = meshes["Petal"].clone();
-        twig.add(petal);
+
+        /*
+        let parent = twig;
+        while (parent !== null) {
+            localPosition.applyMatrix4(parent.matrix);
+            parent = parent.parent;
+        } */
+
+        let worldPosition = new THREE.Vector3();
+        twig.getWorldPosition(worldPosition);
+
+        let worldQuaternion = new THREE.Quaternion();
+        twig.getWorldQuaternion(worldQuaternion);
+
+        petal.position.copy(worldPosition);
+        petal.rotation.setFromQuaternion(worldQuaternion)
+
+        petal.scale.set((Math.random() * 0.5) + 1, (Math.random() * 0.5) + 1, (Math.random() * 0.5) + 1)
+
+        particles._CreateParticle(petal)
     }
     
     // automatic canvas resize based on user window
@@ -266,7 +291,8 @@ async function startScene() {
             if(previousRAF == null) {
                 previousRAF = t;
             }
-            
+            particles._UpdateParticles(t - previousRAF);
+
             previousRAF = t;
             
             raf();

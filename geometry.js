@@ -77,9 +77,9 @@ function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLen
     parent.add(branch3);
 
     // generate child branches
-    generateBranches(branch1, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.6 + Math.random() * 0.4), lowestLevelBranches);
-    generateBranches(branch2, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.6 + Math.random() * 0.4), lowestLevelBranches);
-    generateBranches(branch3, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.6 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch1, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch2, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch3, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
 
     // accumulate the leaf branches in the array
     if(depth <= 3) {
