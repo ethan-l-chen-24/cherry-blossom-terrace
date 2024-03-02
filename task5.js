@@ -1,4 +1,4 @@
-// TASK 4 - Petal Wind Works From All Starting Orientations & Collision Detection With Ground
+// TASK 5 - Add Procedurally Generated Tree
 
 import * as THREE from 'three';
 import { addFloor, addProceduralTree } from './geometry.js';

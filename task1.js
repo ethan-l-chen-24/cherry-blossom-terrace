@@ -1,7 +1,7 @@
 // TASK 1 - Setup 3JS Project and Import Petal Model
 
 import * as THREE from 'three';
-import { ParticleSystem, addGeometry } from './geometry.js';
+import { addGeometry } from './geometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
