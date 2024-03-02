@@ -1,0 +1,11 @@
+Model Information:
+* title:	Chinese Pavilion Memoriam
+* source:	https://sketchfab.com/3d-models/chinese-pavilion-memoriam-87f4931714d7481baa54e5050f679be2
+* author:	TenatiousV (https://sketchfab.com/Tenatious)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Chinese Pavilion Memoriam" (https://sketchfab.com/3d-models/chinese-pavilion-memoriam-87f4931714d7481baa54e5050f679be2) by TenatiousV (https://sketchfab.com/Tenatious) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
