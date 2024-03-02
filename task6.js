@@ -35,7 +35,7 @@ class ParticleSystem {
         this._gravity = new THREE.Vector3(0, -9.8 * 0.0000001, 0);
         this._windVector = new THREE.Vector3(1.0, 0, 0);
         this._windMag = 0;
-        this._dragCo = 2;
+        this._dragCo = 0.1;
 
         // time to update wind
         this._time = 0;
@@ -64,7 +64,7 @@ class ParticleSystem {
             let p = this._particles[i];
 
             // calculate force field
-            let forces = this.calculateForces(p.mass, p.angularVelocity, p.area);
+            let forces = this.calculateForces(p.mass, p.velocity, p.area);
 
             // update to next state
             let newPosition = new THREE.Vector3(
@@ -154,10 +154,12 @@ class ParticleSystem {
             this._windVector.z * this._windMag
         )
 
+        let mag = velocity.length();
+
         let dragForce = new THREE.Vector3(
-            - (velocity.x * velocity.x * 1/2 * this._dragCo * area),
-            - (velocity.y * velocity.y * 1/2 * this._dragCo * area),
-            - (velocity.z * velocity.z * 1/2 * this._dragCo * area),
+            -velocity.x * mag * 1/2 * this._dragCo * area,
+            -velocity.y * mag * 1/2 * this._dragCo * area,
+            -velocity.z * mag * 1/2 * this._dragCo * area,
         )
 
         // get the net forces
@@ -172,7 +174,6 @@ class ParticleSystem {
 
     updateWind() {
         this._windMag = 0.000005 * Math.log(this._time / 2) * Math.sin(this._time) + 0.000005;
-        console.log(this._windMag)
 
         this._windVector = new THREE.Vector3(
             Math.cos(this._time / 4),
