@@ -9,7 +9,7 @@ export function addGeometry(scene) {
 
 export function addFloor(scene) {
     let geometry = new THREE.PlaneGeometry(2000, 2000, 10, 10);
-    let material = new THREE.MeshLambertMaterial({ color: 0x333333, side: THREE.DoubleSide });
+    let material = new THREE.MeshLambertMaterial({ color: 0x22520D, side: THREE.DoubleSide }); // black is 0x333333
     let ground = new THREE.Mesh(geometry, material);
     ground.rotation.x = -Math.PI / 2; 
     ground.position.y = 0;

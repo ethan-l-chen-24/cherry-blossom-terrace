@@ -284,6 +284,19 @@ async function loadModels() {
     // adding Chinese gazebo
     meshes["pavilion"] = await loadGLB('assets/models/chinese_pavilion/scene.gltf');
 
+    // adding torii arch
+    meshes["torii"] = await loadGLB('assets/models/torii/scene.gltf');
+
+    // adding mountain backgrounds
+    meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
+    meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    meshes["mtn3"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    meshes["mtn4"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    meshes["mtn5"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+
+    // adding mountain
+    // meshes["mtn"] = await loadGLB('assets/models/mountain_and_river_scroll/scene.gltf');
+
     return meshes;
 }
 
@@ -311,9 +324,9 @@ async function startScene() {
     // add up orbit controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.maxPolarAngle = 1.45 // preventing user from being able to rotate into ground
+    // controls.maxPolarAngle = 1.45 // preventing user from being able to rotate into ground
     controls.minDistance = 5; // min zoom distance
-    controls.maxDistance = 30; // max zoom distanc
+    // controls.maxDistance = 30; // max zoom distance
 
 
     // add light
@@ -402,6 +415,56 @@ async function startScene() {
     meshes["pavilion"].position.set(25, 1.3, 35);
     scene.add(meshes["pavilion"]);
 
+    // adding torii arch
+    meshes["torii"].scale.set(1.5, 1.5, 1.5);
+    meshes["torii"].position.set(-10, 1, 15);
+    meshes["torii"].rotation.y -= 0.5
+    scene.add(meshes["torii"]);
+
+    // adding mountains to background
+
+    meshes["mtn1"].scale.set(50, 100, 100);
+    meshes["mtn1"].position.set(300, -10, 10);
+    meshes["mtn1"].rotation.y -= 0.5
+    scene.add(meshes["mtn1"]);
+
+    meshes["mtn2"].scale.set(50, 100, 100);
+    meshes["mtn2"].position.set(-300, -20, 300);
+    meshes["mtn2"].rotation.y -= 0.5
+    scene.add(meshes["mtn2"]);
+
+    meshes["mtn3"].scale.set(100, 100, 100);
+    meshes["mtn3"].position.set(-300, -20, 300);
+    meshes["mtn3"].rotation.y -= 0.5
+    scene.add(meshes["mtn3"]);
+
+    meshes["mtn4"].scale.set(100, 200, 100);
+    meshes["mtn4"].position.set(300, -50, -100);
+    meshes["mtn4"].rotation.y -= 0.5
+    scene.add(meshes["mtn4"]);
+
+    meshes["mtn5"].scale.set(100, 700, 100);
+    meshes["mtn5"].position.set(-300, -50, -100);
+    // meshes["mtn4"].rotation.y -= 0.5
+    scene.add(meshes["mtn5"]);
+
+    // meshes["mtn1"].scale.set(50, 100, 100);
+    // meshes["mtn1"].position.set(300, -10, 10);
+    // meshes["mtn1"].rotation.y -= 0.5
+    // scene.add(meshes["mtn1"]);
+
+    // meshes["mtn1"].scale.set(50, 100, 100);
+    // meshes["mtn1"].position.set(300, -10, 10);
+    // meshes["mtn1"].rotation.y -= 0.5
+    // scene.add(meshes["mtn1"]);
+
+
+    // // adding mountain
+    // meshes["mtn"].scale.set(120, 50, 80);
+    // meshes["mtn"].position.set(-20, 1.2, 25);
+    // scene.add(meshes["mtn"]);
+
+
     // adding rocks
 
     meshes["rock1"].scale.set(0.3, 0.3, 0.3);
@@ -435,7 +498,7 @@ async function startScene() {
     meshes["rock6"].position.set(0, 0.5, -3);
     meshes["rock6"].rotation.y -= 0.6
     scene.add(meshes["rock6"]);
-    
+
 }
 
 startScene();
