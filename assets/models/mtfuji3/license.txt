@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mount Fuji Volcano Wide Area Model - Japan
+* source:	https://sketchfab.com/3d-models/mount-fuji-volcano-wide-area-model-japan-2bc48894d5c0496eb83d7b0eaf529499
+* author:	Nate Loper  🗺️ ⛏🏺 (https://sketchfab.com/arizonaguide)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mount Fuji Volcano Wide Area Model - Japan" (https://sketchfab.com/3d-models/mount-fuji-volcano-wide-area-model-japan-2bc48894d5c0496eb83d7b0eaf529499) by Nate Loper  🗺️ ⛏🏺 (https://sketchfab.com/arizonaguide) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
