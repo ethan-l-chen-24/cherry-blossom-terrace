@@ -14,7 +14,7 @@ class ParticleSystem {
         this._particles = [];
         for(var i = 0; i < 3000; i++) {
             var p = particle.clone();
-            p.position.set((Math.random() - 0.5) * 20 - 150, 0, (Math.random() - 0.5) * 10);
+            p.position.set((Math.random() - 0.5) * 20 - 100, 0, (Math.random() - 0.5) * 10);
             p.rotation.set((Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI);
             var mass = Math.random() * 0.5 + 0.25;
             this._particles.push({

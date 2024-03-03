@@ -37,8 +37,8 @@ async function startScene() {
     const near = 1.0;
     const far = 1000.0;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-    camera.position.z = 100;
-    camera.position.y = 5;
+    camera.position.z = 30;
+    camera.position.y = 10;
 
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
