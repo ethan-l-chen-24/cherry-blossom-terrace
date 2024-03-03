@@ -112,7 +112,7 @@ class ParticleSystem {
             } 
 
             // criteria for grounding a particle
-            if(newPosition.y <= 0) {
+            if(newPosition.y <= 0.2) {
                 this._particles[i].grounded = true;
             } else {
                 this._particles[i].grounded = false;
@@ -250,7 +250,7 @@ async function loadModels() {
             );
         })
     }
-
+    
     const meshes = {};
     meshes["Petal"] = await loadGLB('assets/SakuraHanaBira/SakuraHanaBira.glb');
     meshes["Petal"].traverse(function (child) {
