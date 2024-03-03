@@ -37,7 +37,7 @@ export function addProceduralTree(scene) {
     );
 
     const base = new THREE.Mesh(baseGeo, baseMaterial);
-    base.position.set(0, branchLength / 2, 0);
+    base.position.set(0, 13 + branchLength / 2, 0); // originally set y to just branchLength/2
 
     // create branches down to 6 layers (3^6 lowest level branches)
     let lowestLevelBranches = [];
