@@ -25,14 +25,23 @@ export function addProceduralTree(scene) {
     let branchLength = 10;
 
     let baseGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
-    let baseMaterial = new THREE.MeshLambertMaterial({ color: 0x36261b });
+    let textureLoader = new THREE.TextureLoader();
+    let textureMap = textureLoader.load('assets/textures/Bark_001_SD/Bark_001_COLOR.jpg');
+    let normalMap = textureLoader.load('assets/textures/Bark_001_SD/Bark_001_NORM.jpg')
+    //let baseMaterial = new THREE.MeshLambertMaterial({ color: 0x36261b });
+    let baseMaterial = new THREE.MeshStandardMaterial(
+        {
+            map: textureMap,
+            normalMap: normalMap
+        }
+    );
 
     const base = new THREE.Mesh(baseGeo, baseMaterial);
     base.position.set(0, branchLength / 2, 0);
 
     // create branches down to 6 layers (3^6 lowest level branches)
     let lowestLevelBranches = [];
-    generateBranches(base, 7, branchRadius1 / 2, branchRadius2 / 2, branchLength / 2, lowestLevelBranches)
+    generateBranches(base, 7, baseMaterial, branchRadius1 / 2, branchRadius2 / 2, branchLength / 2, lowestLevelBranches)
 
     // draw the tree
     scene.add(base);
@@ -41,13 +50,12 @@ export function addProceduralTree(scene) {
 }
 
 // recursively generate branches given a parent
-function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLength, lowestLevelBranches) {
+function generateBranches(parent, depth, branchMaterial, branchRadius1, branchRadius2, branchLength, lowestLevelBranches) {
     if(depth == 0) {
         return;
     }
 
     let branchGeo = new THREE.CylinderGeometry(branchRadius1, branchRadius2, branchLength);
-    let branchMaterial = new THREE.MeshLambertMaterial({ color: 0x36261b });
 
     // create 3 with random positioned starting location
     const branch1 = new THREE.Mesh(branchGeo, branchMaterial);
@@ -77,9 +85,9 @@ function generateBranches(parent, depth, branchRadius1, branchRadius2, branchLen
     parent.add(branch3);
 
     // generate child branches
-    generateBranches(branch1, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
-    generateBranches(branch2, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
-    generateBranches(branch3, depth - 1, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch1, depth - 1, branchMaterial, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch2, depth - 1, branchMaterial, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
+    generateBranches(branch3, depth - 1, branchMaterial, branchRadius1 / (2.3 + Math.random() * 0.3), branchRadius2 / (2.3 + Math.random() * 0.3), branchLength / (1.4 + Math.random() * 0.4), lowestLevelBranches);
 
     // accumulate the leaf branches in the array
     if(depth <= 3) {
