@@ -4,6 +4,13 @@ import * as THREE from 'three';
 import { addFloor, addProceduralTree } from './geometry.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+// used for water shader
+import Stats from 'three/addons/libs/stats.module.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { Water } from 'three/addons/objects/Water.js';
+import { Sky } from 'three/addons/objects/Sky.js';
+
+
 class ParticleSystem {
     constructor(scene, particle) {
         this._material = new THREE.MeshLambertMaterial({ color: 0xff4444});
@@ -111,7 +118,7 @@ class ParticleSystem {
             } 
 
             // criteria for grounding a particle
-            if(newPosition.y <= 0.2) {
+            if(newPosition.y < 0.1) {
                 this._particles[i].grounded = true;
             } else {
                 this._particles[i].grounded = false;
@@ -226,11 +233,11 @@ class ParticleSystem {
 
     updateWind() {
         this._windMag = 0.000005 * Math.log((this._time + 5) / 2) * Math.sin(this._time + 5) + 0.000005;
-
+    
         this._windVector = new THREE.Vector3(
-            Math.cos((this._time - 6) / 4),
+            Math.cos((this._time - 9) / 4),
             0,
-            Math.sin((this._time - 6) / 4)
+            Math.sin((this._time - 9) / 4)
         )
     }
 }
@@ -249,7 +256,7 @@ async function loadModels() {
             );
         })
     }
-    
+
     const meshes = {};
     meshes["Petal"] = await loadGLB('assets/SakuraHanaBira/SakuraHanaBira.glb');
     meshes["Petal"].traverse(function (child) {
@@ -283,6 +290,20 @@ async function loadModels() {
     // adding Chinese gazebo
     meshes["pavilion"] = await loadGLB('assets/models/chinese_pavilion/scene.gltf');
 
+    // adding torii arch
+    meshes["torii"] = await loadGLB('assets/models/torii/scene.gltf');
+
+    // adding mountain backgrounds
+    meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
+    meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    meshes["mtn3"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    meshes["mtn4"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    meshes["mtn5"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+
+    // adding mountain
+    // meshes["mtn"] = await loadGLB('assets/models/mountain_and_river_scroll/scene.gltf');
+
+    
     return meshes;
 }
 
@@ -297,9 +318,8 @@ async function startScene() {
     const near = 1.0;
     const far = 1000.0;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-    camera.position.z = 20;
-    camera.position.y = 10;
-    camera.lookAt(new THREE.Vector3(0, 3, 0))
+    camera.position.z = 30;
+    camera.position.y = 5;
 
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
@@ -309,11 +329,11 @@ async function startScene() {
     document.body.appendChild( renderer.domElement );
 
     // add light
-    var dirLight = new THREE.DirectionalLight(0x404040, 80);
-    dirLight.position.set(0, 20, 40);
+    var dirLight = new THREE.DirectionalLight(0x404040, 20);
+    dirLight.position.set(0, 100, -600);
     scene.add(dirLight);
 
-    const ambientLight = new THREE.AmbientLight(0x404040, 60);
+    const ambientLight = new THREE.AmbientLight(0x404040, 30);
     scene.add(ambientLight);
 
     scene.background = new THREE.Color(0x87ceeb);
@@ -321,7 +341,8 @@ async function startScene() {
     // create particle system
     var particles = new ParticleSystem(scene, meshes["Petal"]);
 
-    addFloor(scene);
+    // commenting out so no floor
+    // addFloor(scene);
     let twigs = addProceduralTree(scene);
 
     for(let i = 0; i < twigs.length; i++) {
@@ -348,28 +369,84 @@ async function startScene() {
 
         particles._CreateParticle(petal)
     }
-    
-    // automatic canvas resize based on user window
-    function resizeCanvas(){
+
+    // Create water
+    const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+    const water = new Water(
+        waterGeometry,
+        {
+            textureWidth: 512,
+            textureHeight: 512,
+            waterNormals: new THREE.TextureLoader().load('assets/textures/waternormals.jpg', function (texture) {
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            }),
+            sunDirection: new THREE.Vector3(),
+            sunColor: 0xffffff,
+            waterColor: 0x001e0f,
+            distortionScale: 3.7,
+            fog: scene.fog !== undefined
+        }
+    );
+    water.rotation.x = -Math.PI / 2;
+    scene.add(water);
+
+    // Create sky
+    const sky = new Sky();
+    sky.scale.setScalar(10000);
+    scene.add(sky);
+
+    // Set sky parameters
+    const parameters = {
+        turbidity: 10,
+        rayleigh: 2,
+        mieCoefficient: 0.005,
+        mieDirectionalG: 0.8,
+        luminance: 1,
+        inclination: 0.49, // elevation / inclination
+        azimuth: 0.25, // Facing front,
+        exposure: renderer.toneMappingExposure
+    };
+
+    const skyUniforms = sky.material.uniforms;
+
+    skyUniforms['turbidity'].value = parameters.turbidity;
+    skyUniforms['rayleigh'].value = parameters.rayleigh;
+    skyUniforms['mieCoefficient'].value = parameters.mieCoefficient;
+    skyUniforms['mieDirectionalG'].value = parameters.mieDirectionalG;
+
+    // Add sun and moon
+    const theta = Math.PI * (parameters.inclination - 0.5);
+    const phi = 2 * Math.PI * (parameters.azimuth - 0.5);
+
+    const sun = new THREE.Vector3();
+    sun.x = Math.cos(phi);
+    sun.y = Math.sin(phi) * Math.sin(theta);
+    sun.z = Math.sin(phi) * Math.cos(theta);
+
+    skyUniforms['sunPosition'].value.copy(sun);
+
+    // Add the sky to the scene
+    scene.add(sky);
+
+    // Resize function
+    function resizeCanvas() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
     window.addEventListener('resize', resizeCanvas);
 
     function updateCamera(t) {
-        camera.position.z = (10 * Math.exp(t * 0.00002)) * Math.cos(t * Math.exp(t * 0.00001) * 0.0002);
-        camera.position.x = (10 * Math.exp(t * 0.00002)) * Math.sin(t * Math.exp(t * 0.00001) * 0.0002)
-        camera.position.y = 5 + t * 0.0002;
+        camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.00001) * 0.0002);
+        camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.00001) * 0.0002)
+        camera.position.y = 5 + t * 0.0003;
         camera.lookAt(new THREE.Vector3(0, 5, 0))
-        console.log(t)
     }
-
+    
     // run the animation frame loop
     var previousRAF = null;
     function raf() {
-
+    
         requestAnimationFrame( (t) => {
             if(previousRAF == null) {
                 previousRAF = t;
@@ -377,65 +454,18 @@ async function startScene() {
             particles._UpdateParticles(t - previousRAF);
             updateCamera(t);
 
+            // Update water material
+            water.material.uniforms['time'].value += 1.0 / 60.0;
+    
             previousRAF = t;
             
             raf();
         } );
-
+    
         renderer.render( scene, camera );
     }
 
     raf();
-
-    // adding lake
-    meshes["lake"].scale.set(120, 50, 80);
-    meshes["lake"].position.set(-20, 1.2, 25);
-    scene.add(meshes["lake"]);
-
-    // adding Chinese gazebo
-    meshes["gazebo"].scale.set(2, 2, 2);
-    meshes["gazebo"].position.set(15, 5.3, -10);
-    scene.add(meshes["gazebo"]);
-
-    // adding Chinese pavilion
-    meshes["pavilion"].scale.set(1, 2, 1);
-    meshes["pavilion"].position.set(25, 1.3, 35);
-    scene.add(meshes["pavilion"]);
-
-    // adding rocks
-
-    meshes["rock1"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock1"].position.set(3, 0.5, -1);
-    meshes["rock1"].rotation.x += 0.4
-    meshes["rock1"].rotation.z += 0.4
-    scene.add(meshes["rock1"]);
-
-    meshes["rock2"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock2"].position.set(3, 0.2, 2.5);
-    meshes["rock2"].rotation.y += 0.3
-    scene.add(meshes["rock2"]);
-
-    meshes["rock3"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock3"].position.set(0, 0.7, 4);
-    meshes["rock3"].rotation.x -= 1
-    scene.add(meshes["rock3"]);
-
-    meshes["rock4"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock4"].position.set(-3, 0.5, 2);
-    meshes["rock4"].rotation.z -= 0.2
-    scene.add(meshes["rock4"]);
-
-    meshes["rock5"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock5"].position.set(-3, 0.5, -1);
-    meshes["rock5"].rotation.x -= 1
-    meshes["rock5"].rotation.y -= 0.2
-    scene.add(meshes["rock5"]);
-
-    meshes["rock6"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock6"].position.set(0, 0.5, -3);
-    meshes["rock6"].rotation.y -= 0.6
-    scene.add(meshes["rock6"]);
-    
 }
 
 startScene();
