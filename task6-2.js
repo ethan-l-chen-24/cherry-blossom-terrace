@@ -226,7 +226,7 @@ class ParticleSystem {
     }
 
     updateWind() {
-        this._windMag = 0.000005 * Math.log(this._time / 2) * Math.sin(this._time) + 0.000005;
+        this._windMag = 0.000005 * Math.log((this._time + 3) / 2) * Math.sin(this._time + 3) + 0.000005;
 
         this._windVector = new THREE.Vector3(
             Math.cos(this._time / 4),
