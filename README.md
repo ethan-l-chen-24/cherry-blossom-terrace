@@ -1,5 +1,10 @@
 # cherry-blossom-terrace
 
+![Cherry Blosom Terrace](https://github.com/ethan-l-chen-24/cherry-blossom-terrace/blob/main/assets/final_scene.png)
+
+## Demo Video
+`https://www.youtube.com/watch?v=G6eu62HaJVI&ab_channel=EthanChen`
+
 ## Setup
 Clone this repository \
 \
