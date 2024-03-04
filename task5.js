@@ -1,7 +1,7 @@
 // TASK 5 - Add Procedurally Generated Tree
 
 import * as THREE from 'three';
-import { addFloor, addProceduralTree } from './geometry.js';
+import { addFloor, addProceduralTree } from './tasks5-6_geometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 

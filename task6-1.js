@@ -1,7 +1,7 @@
 // Add petals to the tree and have them fly off, and generally make the scene look nicer
 
 import * as THREE from 'three';
-import { addFloor, addProceduralTree } from './geometry.js';
+import { addFloor, addProceduralTree } from './tasks5-6_geometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
