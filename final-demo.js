@@ -232,12 +232,12 @@ class ParticleSystem {
     }
 
     updateWind() {
-        this._windMag = 0.000005 * Math.log((this._time + 5) / 2) * Math.sin(this._time + 5) + 0.000005;
+        this._windMag = 0.000005 * Math.log((this._time + 3) / 2) * Math.sin(this._time + 3) + 0.000005;
     
         this._windVector = new THREE.Vector3(
-            Math.cos((this._time - 9) / 4),
+            Math.cos((this._time - 10) / 4),
             0,
-            Math.sin((this._time - 9) / 4)
+            Math.sin((this._time - 10) / 4)
         )
     }
 }
@@ -316,11 +316,11 @@ async function loadModels() {
     }
     
     // adding mountain backgrounds
-    meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
-    meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-    meshes["mtn3"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-    meshes["mtn4"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-    meshes["mtn5"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+   // meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
+    //meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    //meshes["mtn3"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    //meshes["mtn4"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
+    //meshes["mtn5"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
 
     
     return meshes;
@@ -344,6 +344,7 @@ async function startScene() {
     const listener = new THREE.AudioListener();
     camera.add( listener );
 
+    /*
     // create a global audio source for ocean waves
     const sound = new THREE.Audio( listener );
 
@@ -384,7 +385,7 @@ async function startScene() {
     //     petals_sound.play();
     // });
    
-
+*/
 
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
@@ -531,9 +532,9 @@ async function startScene() {
     // }
         // camera.lookAt(new THREE.Vector3(0, 18, 0)); // Focus point remains the same
         if (t < maxT) {
-            camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
-            camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.000006) * 0.0002);
-            camera.position.y = 15 + t * 0.0003;
+            camera.position.z = (6 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
+            camera.position.x = (6 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.000006) * 0.0002);
+            camera.position.y = 14 + t * 0.0003;
         } else {
             // After reaching maxT, keep the pace fixed
             camera.position.z = (10 * Math.exp(maxT * 0.00003)) * Math.cos(maxT * Math.exp(maxT * 0.000006) * 0.0002);
