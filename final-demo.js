@@ -290,18 +290,37 @@ async function loadModels() {
     // adding Chinese gazebo
     meshes["pavilion"] = await loadGLB('assets/models/chinese_pavilion/scene.gltf');
 
-    // adding torii arch
-    meshes["torii"] = await loadGLB('assets/models/torii/scene.gltf');
+    // adding stone platform
+    meshes["platform"] = await loadGLB('assets/models/floating_island2/scene.gltf');
 
+    // adding stone platform
+    meshes["shrine"] = await loadGLB('assets/models/shinto_shrine/scene.gltf');
+
+    // adding Japanese temple
+    meshes["temple"] = await loadGLB('assets/models/japanese_shrine/scene.gltf');
+
+    // adding Japanese gold shrine  
+    meshes["gold_shrine"] = await loadGLB('assets/models/gold_shrine/scene.gltf');
+
+    // adding Japanese bronze temple 
+    meshes["bronze_temple"] = await loadGLB('assets/models/stone_temple/scene.gltf');
+
+    // adding 6 small floating islands
+    for (let i = 1; i < 7; i++) {
+        meshes["small" + String(i)] = await loadGLB('assets/models/small_green_island/scene.gltf');
+    }
+
+    // adding 6 torii arches
+    for (let i = 1; i < 7; i++) {
+        meshes["torii" + String(i)] = await loadGLB('assets/models/torii/scene.gltf');
+    }
+    
     // adding mountain backgrounds
     meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
     meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
     meshes["mtn3"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
     meshes["mtn4"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
     meshes["mtn5"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-
-    // adding mountain
-    // meshes["mtn"] = await loadGLB('assets/models/mountain_and_river_scroll/scene.gltf');
 
     
     return meshes;
@@ -321,6 +340,52 @@ async function startScene() {
     camera.position.z = 30;
     camera.position.y = 5;
 
+    // create an AudioListener and add it to the camera
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    // create a global audio source for ocean waves
+    const sound = new THREE.Audio( listener );
+
+    // load a sound and set it as the Audio object's buffer
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'assets/sounds/ocean_waves.ogg', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setLoop( true );
+        sound.setVolume( 0.04 );
+        sound.play();
+    });
+
+    // create a global audio source for History of Mimizu music
+    const mimizu_sound = new THREE.Audio( listener );
+
+    // load a sound and set it as the Audio object's buffer
+    const mimizu_audioLoader = new THREE.AudioLoader();
+    mimizu_audioLoader.load( 'assets/sounds/History_of_Mimizu.mp3', function( buffer ) {
+        mimizu_sound.setBuffer( buffer );
+        mimizu_sound.setLoop( true );
+        mimizu_sound.setVolume( 0.12 );
+        mimizu_sound.play();
+    });
+
+    // // create an AudioListener and add it to the camera
+    // const listener2 = new THREE.AudioListener();
+    // camera.add( listener2 );
+
+    // // create the PositionalAudio object (passing in the listener)
+    // const petals_sound = new THREE.PositionalAudio( listener2 );
+
+    // // load a sound and set it as the PositionalAudio object's buffer
+    // const petals_audioLoader = new THREE.AudioLoader();
+    // petals_audioLoader.load( 'assets/sounds/wind_in_trees.ogg', function( buffer ) {
+    //     petals_sound.setBuffer( buffer );
+    //     petals_sound.setRefDistance( 20 );
+    //     // petals_sound.setVolume( 0.6 );
+    //     petals_sound.play();
+    // });
+   
+
+
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -338,6 +403,23 @@ async function startScene() {
 
     scene.background = new THREE.Color(0x87ceeb);
 
+    // sound
+    //     // create an AudioListener and add it to the camera
+    // const listener = new THREE.AudioListener();
+    // camera.add( listener );
+
+    // // create a global audio source
+    // const sound = new THREE.Audio( listener );
+
+    // // load a sound and set it as the Audio object's buffer
+    // const audioLoader = new THREE.AudioLoader();
+    // audioLoader.load( 'assets/sounds/ocean_waves.mp3', function( buffer ) {
+    //     sound.setBuffer( buffer );
+    //     sound.setLoop( true );
+    //     sound.setVolume( 0.5 );
+    //     sound.play();
+    // });
+
     // create particle system
     var particles = new ParticleSystem(scene, meshes["Petal"]);
 
@@ -348,6 +430,7 @@ async function startScene() {
     for(let i = 0; i < twigs.length; i++) {
         var twig = twigs[i];
         let petal = meshes["Petal"].clone();
+        // petal.add(petals_sound); // attach positional sound to petals
 
         /*
         let parent = twig;
@@ -436,11 +519,33 @@ async function startScene() {
     }
     window.addEventListener('resize', resizeCanvas);
 
+
     function updateCamera(t) {
-        camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.00001) * 0.0002);
-        camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.00001) * 0.0002)
-        camera.position.y = 5 + t * 0.0003;
-        camera.lookAt(new THREE.Vector3(0, 5, 0))
+        // max value of t (once reaches this value, keep it at this pace)
+        const maxT = 700000;
+// const distance = 80 - 40 * Math.exp(-t * 0.00003); // Start from a higher position and gradually decrease distance
+        // camera.position.z = distance * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
+        // camera.position.x = distance * Math.sin(t * Math.exp(t * 0.000006) * 0.0002);
+        // camera.position.y = 30 - 15 * Math.exp(-t * 0.0003); // Start higher and gradually decrease y position
+    //     camera.lookAt(new THREE.Vector3(0, 18, 0)); // Focus point remains the same
+    // }
+        // camera.lookAt(new THREE.Vector3(0, 18, 0)); // Focus point remains the same
+        if (t < maxT) {
+            camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
+            camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.000006) * 0.0002);
+            camera.position.y = 15 + t * 0.0003;
+        } else {
+            // After reaching maxT, keep the pace fixed
+            camera.position.z = (10 * Math.exp(maxT * 0.00003)) * Math.cos(maxT * Math.exp(maxT * 0.000006) * 0.0002);
+            camera.position.x = (10 * Math.exp(maxT * 0.00003)) * Math.sin(maxT * Math.exp(maxT * 0.000006) * 0.0002);
+            camera.position.y = 15 + maxT * 0.0003;
+        }
+        camera.lookAt(new THREE.Vector3(0, 18, 0));
+        
+        // camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
+        // camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.000006) * 0.0002)
+        // camera.position.y = 15 + t * 0.0003;
+        // camera.lookAt(new THREE.Vector3(0, 18, 0)) // WAS 0, 5, 0
     }
     
     // run the animation frame loop
@@ -466,6 +571,137 @@ async function startScene() {
     }
 
     raf();
+
+    // adding main platform
+    meshes["platform"].scale.set(0.2, 0.2, 0.2);
+    meshes["platform"].position.set(-4, 10, -1.5);
+    // meshes["platform"].rotation.y += 6.5
+    scene.add(meshes["platform"]);
+
+    // adding small floating islands
+    meshes["small1"].scale.set(1.2, 1.2, 1.2);
+    meshes["small1"].position.set(10, 15, -25);
+    // meshes["small1"].rotation.y += 6.5
+    scene.add(meshes["small1"]);
+
+    meshes["small2"].scale.set(1, 0.8, 1);
+    meshes["small2"].position.set(16, 13, 15);
+    // meshes["small2"].rotation.y += 6.5
+    scene.add(meshes["small2"]);
+
+    // adding shrine to main platform
+    meshes["shrine"].scale.set(20, 20, 20);
+    meshes["shrine"].position.set(-4, 13, 0);
+    // meshes["shrine"].rotation.y += 6.5
+    scene.add(meshes["shrine"]);
+
+    // adding Japanese temple to side of main platform
+    meshes["temple"].rotation.y += 0.1
+    //  meshes["temple"].rotation.y += 0.1
+    meshes["temple"].scale.set(0.5, 0.8, 0.5);
+    meshes["temple"].position.set(-18.7, 14, 3.3);
+    
+    scene.add(meshes["temple"]);
+
+    // adding Japanese gold shrine to small island 1
+    meshes["gold_shrine"].rotation.y += 2.75
+    //  meshes["gold_shrine"].rotation.y += 0.1
+    meshes["gold_shrine"].scale.set(500, 500, 500);
+    meshes["gold_shrine"].position.set(10, 15, -25);
+    scene.add(meshes["gold_shrine"]);
+
+    // adding Japanes bronze temple to small island 2
+    meshes["bronze_temple"].scale.set(1.3, 1.3, 1.3);
+    meshes["bronze_temple"].position.set(17, 12.9, 16);
+    meshes["bronze_temple"].rotation.y -= 2.35
+    scene.add(meshes["bronze_temple"]);
+    
+     // adding torii arches
+    meshes["torii1"].scale.set(9, 9, 9);
+    meshes["torii1"].position.set(-4.5, 0, 19.5);
+    meshes["torii1"].rotation.y -= 0.3
+    scene.add(meshes["torii1"]);
+
+    meshes["torii2"].scale.set(9, 9, 9);
+    meshes["torii2"].position.set(22, 0, -6);
+    meshes["torii2"].rotation.y += 1.78
+    // meshes["torii2"].rotation.x += 2
+    scene.add(meshes["torii2"]);
+
+    meshes["torii3"].scale.set(9, 9, 9);
+    meshes["torii3"].position.set(-12, 0, -17);
+    meshes["torii3"].rotation.y += 4
+    // meshes["torii3"].rotation.x += 2
+    scene.add(meshes["torii3"]);
+
+    // adding rocks
+
+    meshes["rock1"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock1"].position.set(1.5, 12.5, -1);
+    meshes["rock1"].rotation.x += 0.4
+    meshes["rock1"].rotation.z += 0.4
+    scene.add(meshes["rock1"]);
+
+    meshes["rock2"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock2"].position.set(0.85, 12.5, 0.85);
+    meshes["rock2"].rotation.y += 1.8
+    scene.add(meshes["rock2"]);
+
+    meshes["rock3"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock3"].position.set(0, 12.7, 1.27);
+    meshes["rock3"].rotation.y += 0.4
+    scene.add(meshes["rock3"]);
+
+    meshes["rock4"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock4"].position.set(-1.3, 12.5, 0.2);
+    meshes["rock4"].rotation.z -= 0.2
+    meshes["rock4"].rotation.y -= 1
+    scene.add(meshes["rock4"]);
+
+    meshes["rock5"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock5"].position.set(-1, 12.5, -0.5);
+    meshes["rock5"].rotation.x -= 1
+    meshes["rock5"].rotation.y -= 0.2
+    scene.add(meshes["rock5"]);
+
+    meshes["rock6"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock6"].position.set(0.4, 12.5, -1.2);
+    meshes["rock6"].rotation.y += 0.4
+    scene.add(meshes["rock6"]);
+
+    // // adding rocks
+
+    // meshes["rock1"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock1"].position.set(3, 0.5, -1);
+    // meshes["rock1"].rotation.x += 0.4
+    // meshes["rock1"].rotation.z += 0.4
+    // scene.add(meshes["rock1"]);
+
+    // meshes["rock2"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock2"].position.set(3, 0.2, 2.5);
+    // meshes["rock2"].rotation.y += 0.3
+    // scene.add(meshes["rock2"]);
+
+    // meshes["rock3"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock3"].position.set(0, 0.7, 4);
+    // meshes["rock3"].rotation.x -= 1
+    // scene.add(meshes["rock3"]);
+
+    // meshes["rock4"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock4"].position.set(-3, 0.5, 2);
+    // meshes["rock4"].rotation.z -= 0.2
+    // scene.add(meshes["rock4"]);
+
+    // meshes["rock5"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock5"].position.set(-3, 0.5, -1);
+    // meshes["rock5"].rotation.x -= 1
+    // meshes["rock5"].rotation.y -= 0.2
+    // scene.add(meshes["rock5"]);
+
+    // meshes["rock6"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock6"].position.set(0, 0.5, -3);
+    // meshes["rock6"].rotation.y -= 0.6
+    // scene.add(meshes["rock6"]);
 }
 
 startScene();

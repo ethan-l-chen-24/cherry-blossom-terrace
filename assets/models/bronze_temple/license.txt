@@ -1,0 +1,11 @@
+Model Information:
+* title:	Japan Temple
+* source:	https://sketchfab.com/3d-models/japan-temple-fbe52ed7c183432dbd5a12cfbf169bb0
+* author:	Dinh Vi (https://sketchfab.com/dinhvi)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Japan Temple" (https://sketchfab.com/3d-models/japan-temple-fbe52ed7c183432dbd5a12cfbf169bb0) by Dinh Vi (https://sketchfab.com/dinhvi) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
