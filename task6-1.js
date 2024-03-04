@@ -1,7 +1,7 @@
 // Add petals to the tree and have them fly off, and generally make the scene look nicer
 
 import * as THREE from 'three';
-import { addFloor, addProceduralTree } from './tasks5-6_geometry.js';
+import { addFloor, addProceduralTree } from './geometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -248,7 +248,7 @@ async function startScene() {
     var particles = new ParticleSystem(scene, meshes["Petal"]);
 
     addFloor(scene);
-    let twigs = addProceduralTree(scene);
+    let twigs = addProceduralTree(scene, 0);
 
     for(let i = 0; i < twigs.length; i++) {
         var twig = twigs[i];

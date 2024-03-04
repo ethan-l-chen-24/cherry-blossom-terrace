@@ -399,7 +399,7 @@ async function startScene() {
 
     // commenting out so no floor
     // addFloor(scene);
-    let twigs = addProceduralTree(scene);
+    let twigs = addProceduralTree(scene, 13);
 
     for(let i = 0; i < twigs.length; i++) {
         var twig = twigs[i];

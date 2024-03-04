@@ -1,7 +1,7 @@
 // TASK 5 - Add Procedurally Generated Tree
 
 import * as THREE from 'three';
-import { addFloor, addProceduralTree } from './tasks5-6_geometry.js';
+import { addFloor, addProceduralTree } from './geometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -56,7 +56,7 @@ async function startScene() {
     scene.add(light);
 
     addFloor(scene);
-    addProceduralTree(scene);
+    addProceduralTree(scene, 0);
     
     // automatic canvas resize based on user window
     function resizeCanvas(){

@@ -18,7 +18,7 @@ export function addFloor(scene) {
     scene.add(ground);
 }
 
-export function addProceduralTree(scene) {
+export function addProceduralTree(scene, height) {
 
     let branchRadius1 = 0.3;
     let branchRadius2 = 0.7;
@@ -37,7 +37,7 @@ export function addProceduralTree(scene) {
     );
 
     const base = new THREE.Mesh(baseGeo, baseMaterial);
-    base.position.set(0, 13 + branchLength / 2, 0); // originally set y to just branchLength/2
+    base.position.set(0, height + branchLength / 2, 0); // originally set y to just branchLength/2
 
     // create branches down to 6 layers (3^6 lowest level branches)
     let lowestLevelBranches = [];
