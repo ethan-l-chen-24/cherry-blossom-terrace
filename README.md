@@ -1,6 +1,7 @@
 # cherry-blossom-terrace
 
 ## Setup
+Clone this repository
 Run `npm i`
 Run `npx vite`
 Open `http://localhost:5173` in a web browser.
