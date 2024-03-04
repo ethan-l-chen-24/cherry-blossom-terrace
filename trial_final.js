@@ -293,6 +293,20 @@ async function loadModels() {
     // adding stone platform
     meshes["platform"] = await loadGLB('assets/models/floating_island2/scene.gltf');
 
+    // adding stone platform
+    meshes["shrine"] = await loadGLB('assets/models/shinto_shrine/scene.gltf');
+
+    // adding Japanese temple
+    meshes["temple"] = await loadGLB('assets/models/japanese_shrine/scene.gltf');
+
+    // adding Japanese gold shrine Japanese 
+    meshes["gold_shrine"] = await loadGLB('assets/models/gold_shrine/scene.gltf');
+
+    // adding 6 small floating islands
+    for (let i = 1; i < 7; i++) {
+        meshes["small" + String(i)] = await loadGLB('assets/models/small_green_island/scene.gltf');
+    }
+
     // adding 6 torii arches
     for (let i = 1; i < 7; i++) {
         meshes["torii" + String(i)] = await loadGLB('assets/models/torii/scene.gltf');
@@ -326,6 +340,22 @@ async function startScene() {
     camera.position.z = 30;
     camera.position.y = 5;
 
+    // // Create an AudioListener and add it to the camera
+    // const listener = new THREE.AudioListener();
+    // camera.add(listener);
+
+    // // Create a global audio source
+    // const sound = new THREE.Audio(listener);
+
+    // // Load a sound and set it as the Audio object's buffer
+    // const audioLoader = new THREE.AudioLoader();
+    // audioLoader.load('assets/sounds/ocean_waves.mp3', function(buffer) {
+    //     sound.setBuffer(buffer);
+    //     sound.setLoop(true);
+    //     sound.setVolume(0.5);
+    //     sound.play();
+    // });
+
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -342,6 +372,23 @@ async function startScene() {
     scene.add(ambientLight);
 
     scene.background = new THREE.Color(0x87ceeb);
+
+    // sound
+    //     // create an AudioListener and add it to the camera
+    // const listener = new THREE.AudioListener();
+    // camera.add( listener );
+
+    // // create a global audio source
+    // const sound = new THREE.Audio( listener );
+
+    // // load a sound and set it as the Audio object's buffer
+    // const audioLoader = new THREE.AudioLoader();
+    // audioLoader.load( 'assets/sounds/ocean_waves.mp3', function( buffer ) {
+    //     sound.setBuffer( buffer );
+    //     sound.setLoop( true );
+    //     sound.setVolume( 0.5 );
+    //     sound.play();
+    // });
 
     // create particle system
     var particles = new ParticleSystem(scene, meshes["Petal"]);
@@ -444,8 +491,8 @@ async function startScene() {
     function updateCamera(t) {
         camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.00001) * 0.0002);
         camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.00001) * 0.0002)
-        camera.position.y = 5 + t * 0.0003;
-        camera.lookAt(new THREE.Vector3(0, 5, 0))
+        camera.position.y = 15 + t * 0.0003;
+        camera.lookAt(new THREE.Vector3(0, 18, 0)) // WAS 0, 5, 0
     }
     
     // run the animation frame loop
@@ -472,27 +519,45 @@ async function startScene() {
 
     raf();
 
-    // create an AudioListener and add it to the camera
-    const listener = new THREE.AudioListener();
-    camera.add( listener );
-
-    // create a global audio source
-    const sound = new THREE.Audio( listener );
-
-    // load a sound and set it as the Audio object's buffer
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load( 'assets/sounds/ocean_waves.mp3', function( buffer ) {
-        sound.setBuffer( buffer );
-        sound.setLoop( true );
-        sound.setVolume( 0.5 );
-        sound.play();
-    });
     // adding stone platform
-    meshes["platform"].scale.set(0.04, 0.04, 0.04);
-    meshes["platform"].position.set(0, 0, 0);
+    meshes["platform"].scale.set(0.2, 0.2, 0.2);
+    meshes["platform"].position.set(-4, 10, -1.5);
     // meshes["platform"].rotation.y += 6.5
     scene.add(meshes["platform"]);
 
+    // adding small floating islands
+    meshes["small1"].scale.set(1.2, 1.2, 1.2);
+    meshes["small1"].position.set(10, 15, -25);
+    // meshes["small1"].rotation.y += 6.5
+    scene.add(meshes["small1"]);
+
+    meshes["small2"].scale.set(1, 0.8, 1);
+    meshes["small2"].position.set(13, 14, 12.5);
+    // meshes["small2"].rotation.y += 6.5
+    scene.add(meshes["small2"]);
+
+    // adding shrine to platform
+    meshes["shrine"].scale.set(20, 20, 20);
+    meshes["shrine"].position.set(-4, 13, 0);
+    // meshes["shrine"].rotation.y += 6.5
+    scene.add(meshes["shrine"]);
+
+    // adding Japanese temple to platform
+    meshes["temple"].rotation.y += 0.1
+    //  meshes["temple"].rotation.y += 0.1
+    meshes["temple"].scale.set(0.5, 0.8, 0.5);
+    meshes["temple"].position.set(-18.7, 14, 3.3);
+    
+    scene.add(meshes["temple"]);
+
+    // adding Japanese gold shrine to small island
+    meshes["gold_shrine"].rotation.y += 0.1
+    //  meshes["gold_shrine"].rotation.y += 0.1
+    meshes["gold_shrine"].scale.set(500, 500, 500);
+    meshes["gold_shrine"].position.set(10, 15, -25);
+    
+    scene.add(meshes["gold_shrine"]);
+    
      // adding torii arches
     meshes["torii1"].scale.set(2, 2, 2);
     meshes["torii1"].position.set(-10, 0, 15);
@@ -501,47 +566,49 @@ async function startScene() {
 
     meshes["torii2"].scale.set(2, 2, 2);
     meshes["torii2"].position.set(24, 0, 15);
-    meshes["torii2"].rotation.y += 6.5
+    meshes["torii2"].rotation.y += 2
+    // meshes["torii2"].rotation.x += 2
     scene.add(meshes["torii2"]);
 
     meshes["torii3"].scale.set(2, 2, 2);
-    meshes["torii3"].position.set(24, 0, -15);
-    meshes["torii3"].rotation.y += 6.5
+    meshes["torii3"].position.set(20, 0, -13);
+    meshes["torii3"].rotation.y += 1.5
+    // meshes["torii3"].rotation.x += 2
     scene.add(meshes["torii3"]);
 
-    // adding rocks
+    // // adding rocks
 
-    meshes["rock1"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock1"].position.set(3, 0.5, -1);
-    meshes["rock1"].rotation.x += 0.4
-    meshes["rock1"].rotation.z += 0.4
-    scene.add(meshes["rock1"]);
+    // meshes["rock1"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock1"].position.set(3, 0.5, -1);
+    // meshes["rock1"].rotation.x += 0.4
+    // meshes["rock1"].rotation.z += 0.4
+    // scene.add(meshes["rock1"]);
 
-    meshes["rock2"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock2"].position.set(3, 0.2, 2.5);
-    meshes["rock2"].rotation.y += 0.3
-    scene.add(meshes["rock2"]);
+    // meshes["rock2"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock2"].position.set(3, 0.2, 2.5);
+    // meshes["rock2"].rotation.y += 0.3
+    // scene.add(meshes["rock2"]);
 
-    meshes["rock3"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock3"].position.set(0, 0.7, 4);
-    meshes["rock3"].rotation.x -= 1
-    scene.add(meshes["rock3"]);
+    // meshes["rock3"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock3"].position.set(0, 0.7, 4);
+    // meshes["rock3"].rotation.x -= 1
+    // scene.add(meshes["rock3"]);
 
-    meshes["rock4"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock4"].position.set(-3, 0.5, 2);
-    meshes["rock4"].rotation.z -= 0.2
-    scene.add(meshes["rock4"]);
+    // meshes["rock4"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock4"].position.set(-3, 0.5, 2);
+    // meshes["rock4"].rotation.z -= 0.2
+    // scene.add(meshes["rock4"]);
 
-    meshes["rock5"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock5"].position.set(-3, 0.5, -1);
-    meshes["rock5"].rotation.x -= 1
-    meshes["rock5"].rotation.y -= 0.2
-    scene.add(meshes["rock5"]);
+    // meshes["rock5"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock5"].position.set(-3, 0.5, -1);
+    // meshes["rock5"].rotation.x -= 1
+    // meshes["rock5"].rotation.y -= 0.2
+    // scene.add(meshes["rock5"]);
 
-    meshes["rock6"].scale.set(0.3, 0.3, 0.3);
-    meshes["rock6"].position.set(0, 0.5, -3);
-    meshes["rock6"].rotation.y -= 0.6
-    scene.add(meshes["rock6"]);
+    // meshes["rock6"].scale.set(0.3, 0.3, 0.3);
+    // meshes["rock6"].position.set(0, 0.5, -3);
+    // meshes["rock6"].rotation.y -= 0.6
+    // scene.add(meshes["rock6"]);
 }
 
 startScene();

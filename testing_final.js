@@ -300,15 +300,22 @@ async function loadModels() {
     // adding Japanese temple
     meshes["temple"] = await loadGLB('assets/models/japanese_shrine/scene.gltf');
 
+    // adding Japanese gold shrine  
+    meshes["gold_shrine"] = await loadGLB('assets/models/gold_shrine/scene.gltf');
+
+    // adding Japanese bronze temple 
+    meshes["bronze_temple"] = await loadGLB('assets/models/stone_temple/scene.gltf');
+
     // adding 6 small floating islands
     for (let i = 1; i < 7; i++) {
         meshes["small" + String(i)] = await loadGLB('assets/models/small_green_island/scene.gltf');
     }
-    
+
     // adding 6 torii arches
     for (let i = 1; i < 7; i++) {
         meshes["torii" + String(i)] = await loadGLB('assets/models/torii/scene.gltf');
     }
+    
     // adding mountain backgrounds
     meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
     meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
@@ -319,6 +326,7 @@ async function loadModels() {
     // adding mountain
     // meshes["mtn"] = await loadGLB('assets/models/mountain_and_river_scroll/scene.gltf');
 
+    
     
     return meshes;
 }
@@ -335,7 +343,7 @@ async function startScene() {
     const far = 1000.0;
     const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
     camera.position.z = 30;
-    camera.position.y = 5;
+    camera.position.y = 20;
 
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
@@ -496,7 +504,7 @@ async function startScene() {
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // adding stone platform
+    // adding main platform
     meshes["platform"].scale.set(0.2, 0.2, 0.2);
     meshes["platform"].position.set(-4, 10, -1.5);
     // meshes["platform"].rotation.y += 6.5
@@ -509,24 +517,89 @@ async function startScene() {
     scene.add(meshes["small1"]);
 
     meshes["small2"].scale.set(1, 0.8, 1);
-    meshes["small2"].position.set(13, 14, 12.5);
+    meshes["small2"].position.set(16, 13, 15);
     // meshes["small2"].rotation.y += 6.5
     scene.add(meshes["small2"]);
 
-    // adding shrine to platform
+    // adding shrine to main platform
     meshes["shrine"].scale.set(20, 20, 20);
     meshes["shrine"].position.set(-4, 13, 0);
     // meshes["shrine"].rotation.y += 6.5
     scene.add(meshes["shrine"]);
 
-    // adding Japanese temple to platform
+    // adding Japanese temple to side of main platform
     meshes["temple"].rotation.y += 0.1
     //  meshes["temple"].rotation.y += 0.1
-    meshes["temple"].scale.set(0.46, 0.46, 0.46);
+    meshes["temple"].scale.set(0.5, 0.8, 0.5);
     meshes["temple"].position.set(-18.7, 14, 3.3);
     
     scene.add(meshes["temple"]);
 
+    // adding Japanese gold shrine to small island 1
+    meshes["gold_shrine"].rotation.y += 2.75
+    //  meshes["gold_shrine"].rotation.y += 0.1
+    meshes["gold_shrine"].scale.set(500, 500, 500);
+    meshes["gold_shrine"].position.set(10, 15, -25);
+    scene.add(meshes["gold_shrine"]);
+
+    // adding Japanes bronze temple to small island 2
+    meshes["bronze_temple"].scale.set(1.3, 1.3, 1.3);
+    meshes["bronze_temple"].position.set(17, 12.9, 16);
+    meshes["bronze_temple"].rotation.y -= 2.35
+    scene.add(meshes["bronze_temple"]);
+    
+     // adding torii arches
+    meshes["torii1"].scale.set(8, 8, 8);
+    meshes["torii1"].position.set(-4.5, 0, 19.5);
+    meshes["torii1"].rotation.y -= 0.3
+    scene.add(meshes["torii1"]);
+
+    meshes["torii2"].scale.set(8, 8, 8);
+    meshes["torii2"].position.set(22, 0, -6);
+    meshes["torii2"].rotation.y += 1.78
+    // meshes["torii2"].rotation.x += 2
+    scene.add(meshes["torii2"]);
+
+    meshes["torii3"].scale.set(8, 8, 8);
+    meshes["torii3"].position.set(-12, 0, -17);
+    meshes["torii3"].rotation.y += 4
+    // meshes["torii3"].rotation.x += 2
+    scene.add(meshes["torii3"]);
+
+    // adding rocks
+
+    meshes["rock1"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock1"].position.set(1.5, 12.5, -1);
+    meshes["rock1"].rotation.x += 0.4
+    meshes["rock1"].rotation.z += 0.4
+    scene.add(meshes["rock1"]);
+
+    meshes["rock2"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock2"].position.set(0.85, 12.5, 0.85);
+    meshes["rock2"].rotation.y += 1.8
+    scene.add(meshes["rock2"]);
+
+    meshes["rock3"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock3"].position.set(0, 12.7, 1.27);
+    meshes["rock3"].rotation.y += 0.4
+    scene.add(meshes["rock3"]);
+
+    meshes["rock4"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock4"].position.set(-1.3, 12.5, 0.2);
+    meshes["rock4"].rotation.z -= 0.2
+    meshes["rock4"].rotation.y -= 1
+    scene.add(meshes["rock4"]);
+
+    meshes["rock5"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock5"].position.set(-1, 12.5, -0.5);
+    meshes["rock5"].rotation.x -= 1
+    meshes["rock5"].rotation.y -= 0.2
+    scene.add(meshes["rock5"]);
+
+    meshes["rock6"].scale.set(0.3, 0.3, 0.3);
+    meshes["rock6"].position.set(0.4, 12.5, -1.2);
+    meshes["rock6"].rotation.y += 0.4
+    scene.add(meshes["rock6"]);
 }
 
 startScene();
