@@ -1,4 +1,4 @@
-// Add petals to the tree and have them fly off, and generally make the scene look nicer
+// Final demo scene with assets!
 
 import * as THREE from 'three';
 import { addFloor, addProceduralTree } from './geometry.js';
@@ -18,24 +18,6 @@ class ParticleSystem {
 
         // initialize some random particles
         this._particles = [];
-       /* for(var i = 0; i < 3000; i++) {
-            var p = particle.clone();
-            p.position.set((Math.random() - 0.5) * 20 - 150, 0, (Math.random() - 0.5) * 10);
-            p.rotation.set((Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI, (Math.random() - 0.5) * 2 * Math.PI);
-            var mass = Math.random() * 0.5 + 0.25;
-            this._particles.push({
-                particle: p,
-                position: p.position,
-                rotation: p.rotation,
-                velocity: new THREE.Vector3(0.0, 0.0, 0.0),
-                area: mass,
-                mass: mass,
-                angularVelocity: new THREE.Vector3(0.0, 0.0, 0.0),
-                grounded: false,
-                attached: false
-            }); 
-            scene.add(p);
-        } */
 
         // force values/constants
         this._gravity = new THREE.Vector3(0, -9.8 * 0.0000001, 0);
@@ -49,6 +31,7 @@ class ParticleSystem {
         this._time = 0;
     }
 
+    // add a particle to the scene
     _CreateParticle(p) {
         this._scene.add(p)
 
@@ -68,6 +51,7 @@ class ParticleSystem {
         }); 
     }
 
+    // update position and all metadata associated with particles
     _UpdateParticles(timeElapsed) {
         for(var i = 0; i < this._particles.length; i++) {
             let p = this._particles[i];
@@ -126,7 +110,7 @@ class ParticleSystem {
 
             // check if it is attached to the tree, in which case don't move
             if(p.attached) {
-                // calculate force field
+                // calculate force field of spring mass damper
                 let forces = this.calculateSMD(p);
 
                 // update to next state
@@ -156,6 +140,7 @@ class ParticleSystem {
                 }
             }
 
+            // update for next step
             this._particles[i].position = newPosition;
             this._particles[i].rotation = newRotation;
             this._particles[i].velocity = newVelocity;
@@ -169,6 +154,7 @@ class ParticleSystem {
         this.updateWind();
     }
 
+    // wind + gravity + drag
     calculateForces(p) {
         let gravityForce = new THREE.Vector3(
             this._gravity.x * p.mass,
@@ -200,6 +186,7 @@ class ParticleSystem {
         return netForces;
     }
 
+    // spring mass damper system
     calculateSMD(p) {
         let windForce = new THREE.Vector3(
             this._windVector.x * this._windMag,
@@ -231,17 +218,19 @@ class ParticleSystem {
         return netForces;
     }
 
+    // update the wind field
     updateWind() {
         this._windMag = 0.000005 * Math.log((this._time + 3) / 2) * Math.sin(this._time + 3) + 0.000005;
     
         this._windVector = new THREE.Vector3(
-            Math.cos((this._time - 10) / 4),
+            Math.cos((this._time - 5) / 4),
             0,
-            Math.sin((this._time - 10) / 4)
+            Math.sin((this._time - 5) / 4)
         )
     }
 }
 
+// preload all of ouor meshes before running the scene
 async function loadModels() {
 
     // function to load meshes
@@ -272,14 +261,6 @@ async function loadModels() {
     meshes["rock4"] = await loadGLB('assets/models/rock/scene.gltf');
     meshes["rock5"] = await loadGLB('assets/models/rock/scene.gltf');
     meshes["rock6"] = await loadGLB('assets/models/rock/scene.gltf');
-    
-    // all meshes associated w/ the model can cast shadows & receive shadows (recursively thru traverse function)
-    // meshes["Rock"].traverse((child) => {
-    //     if (child.isMesh) {
-    //         child.castShadow = true;
-    //         child.receiveShadow = true;
-    //     }
-    // })
 
     // adding lake
     meshes["lake"] = await loadGLB('assets/models/lake/scene.gltf');
@@ -315,14 +296,6 @@ async function loadModels() {
         meshes["torii" + String(i)] = await loadGLB('assets/models/torii/scene.gltf');
     }
     
-    // adding mountain backgrounds
-   // meshes["mtn1"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf'); // grassy_landscape_with_snow
-    //meshes["mtn2"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-    //meshes["mtn3"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-    //meshes["mtn4"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-    //meshes["mtn5"] = await loadGLB('assets/models/grassy_landscape_with_snow/scene.gltf');
-
-    
     return meshes;
 }
 
@@ -344,7 +317,7 @@ async function startScene() {
     const listener = new THREE.AudioListener();
     camera.add( listener );
 
-    /*
+    
     // create a global audio source for ocean waves
     const sound = new THREE.Audio( listener );
 
@@ -385,7 +358,7 @@ async function startScene() {
     //     petals_sound.play();
     // });
    
-*/
+
 
     // setup the THREE.js renderer
     const renderer = new THREE.WebGLRenderer({
@@ -524,13 +497,7 @@ async function startScene() {
     function updateCamera(t) {
         // max value of t (once reaches this value, keep it at this pace)
         const maxT = 700000;
-// const distance = 80 - 40 * Math.exp(-t * 0.00003); // Start from a higher position and gradually decrease distance
-        // camera.position.z = distance * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
-        // camera.position.x = distance * Math.sin(t * Math.exp(t * 0.000006) * 0.0002);
-        // camera.position.y = 30 - 15 * Math.exp(-t * 0.0003); // Start higher and gradually decrease y position
-    //     camera.lookAt(new THREE.Vector3(0, 18, 0)); // Focus point remains the same
-    // }
-        // camera.lookAt(new THREE.Vector3(0, 18, 0)); // Focus point remains the same
+
         if (t < maxT) {
             camera.position.z = (6 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
             camera.position.x = (6 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.000006) * 0.0002);
@@ -541,12 +508,8 @@ async function startScene() {
             camera.position.x = (10 * Math.exp(maxT * 0.00003)) * Math.sin(maxT * Math.exp(maxT * 0.000006) * 0.0002);
             camera.position.y = 15 + maxT * 0.0003;
         }
-        camera.lookAt(new THREE.Vector3(0, 18, 0));
-        
-        // camera.position.z = (10 * Math.exp(t * 0.00003)) * Math.cos(t * Math.exp(t * 0.000006) * 0.0002);
-        // camera.position.x = (10 * Math.exp(t * 0.00003)) * Math.sin(t * Math.exp(t * 0.000006) * 0.0002)
-        // camera.position.y = 15 + t * 0.0003;
-        // camera.lookAt(new THREE.Vector3(0, 18, 0)) // WAS 0, 5, 0
+
+        camera.lookAt(new THREE.Vector3(0, 18, 0)); // always look at the same point
     }
     
     // run the animation frame loop
@@ -557,6 +520,8 @@ async function startScene() {
             if(previousRAF == null) {
                 previousRAF = t;
             }
+
+            // update
             particles._UpdateParticles(t - previousRAF);
             updateCamera(t);
 
@@ -636,7 +601,6 @@ async function startScene() {
     scene.add(meshes["torii3"]);
 
     // adding rocks
-
     meshes["rock1"].scale.set(0.3, 0.3, 0.3);
     meshes["rock1"].position.set(1.5, 12.5, -1);
     meshes["rock1"].rotation.x += 0.4
@@ -669,40 +633,6 @@ async function startScene() {
     meshes["rock6"].position.set(0.4, 12.5, -1.2);
     meshes["rock6"].rotation.y += 0.4
     scene.add(meshes["rock6"]);
-
-    // // adding rocks
-
-    // meshes["rock1"].scale.set(0.3, 0.3, 0.3);
-    // meshes["rock1"].position.set(3, 0.5, -1);
-    // meshes["rock1"].rotation.x += 0.4
-    // meshes["rock1"].rotation.z += 0.4
-    // scene.add(meshes["rock1"]);
-
-    // meshes["rock2"].scale.set(0.3, 0.3, 0.3);
-    // meshes["rock2"].position.set(3, 0.2, 2.5);
-    // meshes["rock2"].rotation.y += 0.3
-    // scene.add(meshes["rock2"]);
-
-    // meshes["rock3"].scale.set(0.3, 0.3, 0.3);
-    // meshes["rock3"].position.set(0, 0.7, 4);
-    // meshes["rock3"].rotation.x -= 1
-    // scene.add(meshes["rock3"]);
-
-    // meshes["rock4"].scale.set(0.3, 0.3, 0.3);
-    // meshes["rock4"].position.set(-3, 0.5, 2);
-    // meshes["rock4"].rotation.z -= 0.2
-    // scene.add(meshes["rock4"]);
-
-    // meshes["rock5"].scale.set(0.3, 0.3, 0.3);
-    // meshes["rock5"].position.set(-3, 0.5, -1);
-    // meshes["rock5"].rotation.x -= 1
-    // meshes["rock5"].rotation.y -= 0.2
-    // scene.add(meshes["rock5"]);
-
-    // meshes["rock6"].scale.set(0.3, 0.3, 0.3);
-    // meshes["rock6"].position.set(0, 0.5, -3);
-    // meshes["rock6"].rotation.y -= 0.6
-    // scene.add(meshes["rock6"]);
 }
 
 startScene();
