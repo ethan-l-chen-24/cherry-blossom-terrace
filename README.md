@@ -6,6 +6,10 @@ Run `npm i`
 Run `npx vite`
 Open `http://localhost:5173` in a web browser.
 
+## Project Structure
+
+`.html` files render the WebGL for the associated javascript file with the same name. The `assets` folder contains all meshes, textures, and audio we used. The `playground` folder contians drafts we did not end up using in our final demo.
+
 ## Assets
 
 **Torri Arch**
