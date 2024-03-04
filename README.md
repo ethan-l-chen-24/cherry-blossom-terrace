@@ -10,6 +10,20 @@ Open `http://localhost:5173` in a web browser.
 
 `.html` files render the WebGL for the associated javascript file with the same name. The `assets` folder contains all meshes, textures, and audio we used. The `playground` folder contians drafts we did not end up using in our final demo.
 
+## Sources
+
+**Three.js Documentation**
+- https://threejs.org/docs/
+
+**Writing a Particle System (using Three.js)**
+- https://www.youtube.com/watch?v=OFqENgtqRAY&t=89s&ab_channel=SimonDev — referenced for setup and structure but otherwise the code is very different
+
+**Three.js Importing Models Tutorial | How to Import GLTF Models in Three.js**
+- https://www.youtube.com/watch?v=vLz2Rk1r_gQ — referenced to learn how to load and manipulate models
+
+**Add an Interactive 3D Model to Your Website // Three.js Tutorial for Beginners**
+- https://www.youtube.com/watch?v=aOQuuotM-Ww — referenced to learn how to load and manipulate models
+
 ## Assets
 
 **Torri Arch**
